@@ -1,6 +1,6 @@
 3rd Party Library and Application Versions
 ------------------------------------------
-
+ 
 USD relies on an ecosystem of libraries and applications. This page outlines
 the versions of these libraries used and tested against at Pixar.
 
