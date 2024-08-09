@@ -1,0 +1,52 @@
+name: test_if
+
+on:
+  push:
+    branches:
+      - dev
+      - release
+      - test_if
+  pull_request:
+    branches:
+      - dev
+      - release
+      - test_if
+    paths:
+      - .github/workflows/pypi.yml
+      - build_scripts/pypi/*.py
+      - build_scripts/pypi/package_files/*
+  workflow_dispatch:
+    inputs:
+      post_release_tag:
+        description: 'post release tag'
+        default: ''
+
+env:
+  POST_RELEASE_TAG: ${{ github.event.inputs.post_release_tag == '' && ' ' || format('--post-release-tag {0}', github.event.inputs.post_release_tag) }}
+
+jobs:
+  Linux:
+    strategy:
+      matrix:
+        PYTHON:
+          - TAG: cp37
+            INTERPRETER: /opt/python/cp37-cp37m/bin/python
+            VERSION_SPEC: '3.7'
+          - TAG: cp38
+            INTERPRETER: /opt/python/cp38-cp38/bin/python
+            VERSION_SPEC: '3.8'
+          - TAG: cp39
+            INTERPRETER: /opt/python/cp39-cp39/bin/python
+            VERSION_SPEC: '3.9'
+          - TAG: cp310
+            INTERPRETER: /opt/python/cp310-cp310/bin/python
+            VERSION_SPEC: '3.10'
+          - TAG: cp311
+            INTERPRETER: /opt/python/cp311-cp311/bin/python
+            VERSION_SPEC: '3.11'
+    runs-on: ubuntu-20.04
+    timeout-minutes: 90
+    steps:
+      - name: list
+        run: |
+          ls -lart
