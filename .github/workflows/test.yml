@@ -26,7 +26,7 @@ on:
 
 jobs:
  job01:
-   if: contains(github.event.comment.html_url, '/pull/')    # check if the comments come from pull request, exclude those from issue.
+   #if: contains(github.event.comment.html_url, '/pull/')    # check if the comments come from pull request, exclude those from issue.
    runs-on: [re-centos7]
    steps:
     - name: say hello
