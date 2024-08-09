@@ -20,13 +20,14 @@ on:
       post_release_tag:
         description: 'post release tag'
         default: ''
+  issue_comment:
+    types: [created]
 
 env:
   POST_RELEASE_TAG: ${{ github.event.inputs.post_release_tag == '' && ' ' || format('--post-release-tag {0}', github.event.inputs.post_release_tag) }}
-
 jobs:
   Linux:
-    if: ${{ github.event_name == 'push' }} ||  ${{ github.event_name == 'workflow_dispatch' }}
+    if: (${{ github.event_name == 'issue_comment' }} && contains(github.event.comment.html_url, '/accepted')) ||  ${{ github.event_name == 'push' }} || ${{ github.event_name == 'workflow_dispatch' }}
     strategy:
       matrix:
         PYTHON:
