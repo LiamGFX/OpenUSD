@@ -27,7 +27,11 @@ env:
   POST_RELEASE_TAG: ${{ github.event.inputs.post_release_tag == '' && ' ' || format('--post-release-tag {0}', github.event.inputs.post_release_tag) }}
 jobs:
   Linux:
-    if: (${{ github.event_name == 'issue_comment' }} && contains(github.event.comment.html_url, '/accepted')) ||  ${{ github.event_name == 'push' }} || ${{ github.event_name == 'workflow_dispatch' }}
+    # if: (${{ github.event_name == 'issue_comment' }} && contains(github.event.comment.html_url, '/accepted')) ||  ${{ github.event_name == 'push' }} || ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'issue_comment' }} || ${{ github.event_name == 'push' }} || ${{ github.event_name == 'workflow_dispatch' }}
+    if: contains(github.event.comment.body, '/accepted')   # check the comment if it contains the keywords
+    run: |
+      echo say hello
     strategy:
       matrix:
         PYTHON:
