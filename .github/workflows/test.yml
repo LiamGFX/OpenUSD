@@ -27,32 +27,10 @@ env:
   POST_RELEASE_TAG: ${{ github.event.inputs.post_release_tag == '' && ' ' || format('--post-release-tag {0}', github.event.inputs.post_release_tag) }}
 jobs:
   Linux:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 90
     # if: (${{ github.event_name == 'issue_comment' }} && contains(github.event.comment.html_url, '/accepted')) ||  ${{ github.event_name == 'push' }} || ${{ github.event_name == 'workflow_dispatch' }}
     # if: ${{ github.event_name == 'issue_comment' }} || ${{ github.event_name == 'push' }} || ${{ github.event_name == 'workflow_dispatch' }}
     if: contains(github.event.comment.body, '/accepted')   # check the comment if it contains the keywords
-    run: |
-      echo say hello
-    strategy:
-      matrix:
-        PYTHON:
-          - TAG: cp37
-            INTERPRETER: /opt/python/cp37-cp37m/bin/python
-            VERSION_SPEC: '3.7'
-          - TAG: cp38
-            INTERPRETER: /opt/python/cp38-cp38/bin/python
-            VERSION_SPEC: '3.8'
-          - TAG: cp39
-            INTERPRETER: /opt/python/cp39-cp39/bin/python
-            VERSION_SPEC: '3.9'
-          - TAG: cp310
-            INTERPRETER: /opt/python/cp310-cp310/bin/python
-            VERSION_SPEC: '3.10'
-          - TAG: cp311
-            INTERPRETER: /opt/python/cp311-cp311/bin/python
-            VERSION_SPEC: '3.11'
-    runs-on: ubuntu-20.04
-    timeout-minutes: 90
-    steps:
-      - name: list
-        run: |
-          ls -lart
+      run: |
+        echo say hello
