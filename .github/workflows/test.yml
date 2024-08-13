@@ -26,7 +26,7 @@ on:
 
 jobs:
  job01:
-   if: contains(github.event.comment.body, '/support')   # check the comment if it contains the keywords
+   # if: contains(github.event.comment.body, '/support')   # check the comment if it contains the keywords
    runs-on: ubuntu-20.04
    steps:
     - name: say hello
