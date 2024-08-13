@@ -39,7 +39,6 @@ jobs:
        echo test
     - name: write comment
       uses: actions/github-script@v7
-      with:
       script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
