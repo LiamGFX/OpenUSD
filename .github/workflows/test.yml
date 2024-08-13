@@ -26,9 +26,9 @@ on:
 
 jobs:
  job01:
-   if: contains(github.event.comment.body, '/support')   # check the comment if it contains the keywords
    runs-on: ubuntu-20.04
    steps:
+   if: contains(github.event.comment.body, '/support')   # check the comment if it contains the keywords
     - name: say hello
       # if: contains(github.event.comment.body, '/support')   # check the comment if it contains the keywords
       run: |
@@ -37,6 +37,7 @@ jobs:
       # if: contains(github.event.comment.body, '/test')  # check the comment if it contains the keywords
       run: |
        echo test
+   if: always()
     - name: Write comment
       uses: actions/github-script@v7
       with:
