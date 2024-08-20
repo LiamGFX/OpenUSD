@@ -92,7 +92,7 @@ jobs:
           export PYTHON_PATH=/Users/runner/hostedtoolcache/Python/3.11.9/x64/lib/python3.11/site-packages:$PYTHON_PATH
           export PATH=/Applications/CMake.app/Contents/bin:$PATH
           ls -la /Users/runner/hostedtoolcache/Python/3.11.9/x64/lib/python3.11/site-packages
-          python3 build_scripts/build_usd.py --no-materialx --generator Xcode --build USDgen/build --src USDgen/src USDinst --build-args USD,"-DPXR_HEADLESS_TEST_MODE=ON" -v
+          python3 build_scripts/build_usd.py --no-materialx --generator Xcode --build USDgen/build --src USDgen/src USDinst -v
       - name: Save build artifacts to cache
         if: steps.cache-usd-build-dependency.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
