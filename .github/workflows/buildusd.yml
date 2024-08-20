@@ -59,7 +59,7 @@ jobs:
           path: USDinst
 
   macOS:
-    runs-on: mac-14-self
+    runs-on: macos-12
     timeout-minutes: 120
     steps:
       - name: Checkout code
