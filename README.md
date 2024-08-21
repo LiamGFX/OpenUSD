@@ -4,7 +4,7 @@ Universal Scene Description
 Universal Scene Description (USD) is an efficient, scalable system for
 authoring, reading, and streaming time-sampled scene description for
 interchange between graphics applications.
-
+ 
 For more details, please visit the web site [here](http://openusd.org).
 
 Build Status
