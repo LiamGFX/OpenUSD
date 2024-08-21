@@ -1,10 +1,10 @@
 name: PyPiPackaging
 
-# Trigger this build whenever the dev or release branches are updated,
-# or on pull requests that affect PyPI-related files.
+# Trigger this build whenever the dev or release branches are updated
+# or on-demand.
 #
 # Ideally we'd run this pipeline for all pull requests, but doing so consumes
-# our limited number of slots on Azure and almost always just duplicates the
+# our limited number of slots and almost always just duplicates the
 # build done in the main pipeline.
 on:
   push:
