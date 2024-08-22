@@ -146,6 +146,8 @@ jobs:
           ${{ matrix.PYTHON.INTERPRETER }} setup.py ${{ env.POST_RELEASE_TAG }} bdist_wheel --python-tag ${{ matrix.PYTHON.TAG }} --plat-name macosx_10_9_universal2
       - name: Running delocate
         run: |
+          # set DYLD_FALLBACK_LIBRARY_PATH for delocate-wheel to resolve libs 
+          # https://github.com/pypa/cibuildwheel/issues/816
           export DYLD_FALLBACK_LIBRARY_PATH=`readlink -f USDinst/lib`
           echo $DYLD_FALLBACK_LIBRARY_PATH
           ls -la $DYLD_FALLBACK_LIBRARY_PATH
