@@ -22,7 +22,7 @@ jobs:
         id: check
         with:
           require: 'write'
-          username: github.event.comment.user.login
+          username: ${{ github.event.comment.user.login }}
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
