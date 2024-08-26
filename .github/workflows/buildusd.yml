@@ -5,10 +5,12 @@ on:
     branches:
       - dev
       - release
-  pull_request:
-    branches:
-      - dev
-      - release
+  # pull_request:
+  #   branches:
+  #     - dev
+  #     - release
+  issue_comment:                                     
+    types: [created, edited]
 
 env:
   PYTHON_VERSION: "3.9"
