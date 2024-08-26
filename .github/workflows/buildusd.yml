@@ -58,6 +58,21 @@ jobs:
         with:
           name: usd-linux
           path: USDinst
+      - name: Write comment
+        if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') }} 
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const name = '${{ github.workflow   }}';
+            const url = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
+            const success = '${{ job.status }}' === 'success';
+            const body = `👋\n${name}: ${success ? '✅ succeeded ✅' : '❌ failed ❌'}\n${url}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })
 
   macOS:
     if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') }} || ${{ github.event_name == 'push' }}
@@ -108,6 +123,21 @@ jobs:
         with:
           name: usd-macOS
           path: USDinst
+      - name: Write comment
+        if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') }} 
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const name = '${{ github.workflow   }}';
+            const url = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
+            const success = '${{ job.status }}' === 'success';
+            const body = `👋\n${name}: ${success ? '✅ succeeded ✅' : '❌ failed ❌'}\n${url}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })
 
   Windows:
     if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') }} || ${{ github.event_name == 'push' }}
@@ -160,3 +190,18 @@ jobs:
         with:
           name: usd-win64
           path: USDinst
+      - name: Write comment
+        if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') }} 
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const name = '${{ github.workflow   }}';
+            const url = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
+            const success = '${{ job.status }}' === 'success';
+            const body = `👋\n${name}: ${success ? '✅ succeeded ✅' : '❌ failed ❌'}\n${url}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })
