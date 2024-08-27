@@ -27,9 +27,7 @@ jobs:
         with:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
-      - run: echo "user-permission = ${{ steps.check.outputs.user-permission }}"
-      - run: echo "require-result = ${{ steps.check.outputs.require-result }}"
-      - run: echo "check-result = ${{ steps.check.outputs.check-result }}"
+      if: steps.checkUser.outputs.check-result == 'false'
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
