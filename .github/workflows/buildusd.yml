@@ -17,8 +17,21 @@ env:
   PYTHON_VERSION_MAC: "3.11"
 
 jobs:
+  GetUser:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 5
+    outputs:
+      require-result: ${{ steps.check.outputs.require-result }}"
+    steps:
+      - uses: actions-cool/check-user-permission@v2
+        id: check
+        with:
+          require: 'write'
+          username: ${{ github.event.comment.user.login }}
+      - run: echo "require-result=${{ steps.check.outputs.require-result }}" >> $GITHUB_OUTPUT
   Linux:
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run')) || github.event_name == 'push' }}
+    needs: [GetUser]
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.require-result) || github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
@@ -82,6 +95,7 @@ jobs:
             })
 
   macOS:
+    needs: [GetUser]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run')) || github.event_name == 'push' }}
     runs-on: macos-12
     timeout-minutes: 120
@@ -147,6 +161,7 @@ jobs:
             })
 
   Windows:
+    needs: [GetUser]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run')) || github.event_name == 'push' }}
     runs-on: windows-2019
     timeout-minutes: 120
