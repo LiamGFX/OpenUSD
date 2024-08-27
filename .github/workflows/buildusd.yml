@@ -24,7 +24,7 @@ jobs:
         with:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
-      - run: echo "require-result=${{ steps.check.outputs.require-result }}" >> $GITHUB_OUTPUT
+      - run: echo "require-result=${{ !steps.check.outputs.require-result }}" >> $GITHUB_OUTPUT
   CheckUser:
     needs: [GetUser]
     runs-on: ubuntu-20.04
