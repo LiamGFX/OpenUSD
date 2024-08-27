@@ -25,6 +25,11 @@ jobs:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
       - run: echo "require-result=${{ steps.check.outputs.require-result }}" >> $GITHUB_OUTPUT
+  CheckUser:
+    needs: [GetUser]
+    runs-on: ubuntu-20.04
+    timeout-minutes: 5
+      - run: echo {{ needs.GetUser.outputs.require-result }}
   Linux:
     needs: [GetUser]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) || github.event_name == 'push' }}
