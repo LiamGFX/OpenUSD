@@ -31,18 +31,10 @@ jobs:
       - run: echo "require-result=${{ steps.check.outputs.require-result }}" >> $GITHUB_OUTPUT
   Linux:
     needs: [GetUser]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.require-result) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && !needs.GetUser.require-result) || github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
-      - uses: actions-cool/check-user-permission@v2
-        id: check
-        with:
-          require: 'write'
-          username: ${{ github.event.comment.user.login }}
-      - run: echo "user-permission = ${{ steps.check.outputs.user-permission }}"
-      - run: echo "require-result = ${{ steps.check.outputs.require-result }}"
-      - run: echo "check-result = ${{ steps.check.outputs.check-result }}"
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
