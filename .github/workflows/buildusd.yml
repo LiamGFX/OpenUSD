@@ -35,7 +35,6 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
-      - run: echo "check-result = ${{ needs.GetUser.outputs.require-result }}"
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
@@ -89,7 +88,7 @@ jobs:
 
   macOS:
     needs: [GetUser]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run')) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) || github.event_name == 'push' }}
     runs-on: macos-12
     timeout-minutes: 120
     steps:
@@ -155,7 +154,7 @@ jobs:
 
   Windows:
     needs: [GetUser]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run')) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) || github.event_name == 'push' }}
     runs-on: windows-2019
     timeout-minutes: 120
     steps:
