@@ -17,24 +17,24 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 5
     outputs:
-      require-result: ${{ steps.check.outputs.require-result }}
+      example_output: ${{ steps.step2.outputs.example_value }}
     steps:
       - uses: actions-cool/check-user-permission@v2
         id: check
         with:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
-      - run: echo "::set-output name=require-result::$(echo ${{ !steps.check.outputs.require-result }})"
+      - run: echo "::set-output name=example_value::$(echo ${{ !steps.check.outputs.require-result }})"
       # - run: echo "require-result=${{ !steps.check.outputs.require-result }}" >> $GITHUB_OUTPUT
   CheckUser:
     needs: [GetUser]
     runs-on: ubuntu-20.04
     timeout-minutes: 5
     steps:
-      - run: echo ${{ needs.GetUser.outputs.require-result }}
+      - run: echo ${{ needs.GetUser.outputs.example_output }}
   Linux:
     needs: [GetUser]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.example_output) || github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
@@ -74,7 +74,7 @@ jobs:
           name: usd-linux
           path: USDinst
       - name: Write comment
-        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) }}
+        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.example_output) }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -91,7 +91,7 @@ jobs:
 
   macOS:
     needs: [GetUser]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.example_output) || github.event_name == 'push' }}
     runs-on: macos-12
     timeout-minutes: 120
     steps:
@@ -135,7 +135,7 @@ jobs:
           name: usd-macOS
           path: USDinst
       - name: Write comment
-        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) }}
+        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.example_output) }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -152,7 +152,7 @@ jobs:
 
   Windows:
     needs: [GetUser]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.example_output) || github.event_name == 'push' }}
     runs-on: windows-2019
     timeout-minutes: 120
     steps:
@@ -198,7 +198,7 @@ jobs:
           name: usd-win64
           path: USDinst
       - name: Write comment
-        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) }}
+        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.example_output) }}
         uses: actions/github-script@v7
         with:
           script: |
