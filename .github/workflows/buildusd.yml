@@ -5,10 +5,6 @@ on:
     branches:
       - dev
       - release
-  # pull_request:
-  #   branches:
-  #     - dev
-  #     - release
   issue_comment:                                     
     types: [created, edited]
 
@@ -29,19 +25,12 @@ jobs:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
       - run: echo "require-result=${{ !steps.check.outputs.require-result }}" >> $GITHUB_OUTPUT
-  CheckUser:
-    needs: [GetUser]
-    runs-on: ubuntu-20.04
-    timeout-minutes: 5
-    steps:
-      - run: echo "check-result = ${{ needs.GetUser.outputs.require-result }}"
   Linux:
     needs: [GetUser]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) || github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
-      - run: echo "check-result = ${{ needs.GetUser.outputs.require-result }}"
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
@@ -78,7 +67,7 @@ jobs:
           name: usd-linux
           path: USDinst
       - name: Write comment
-        if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') }} 
+        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -95,7 +84,7 @@ jobs:
 
   macOS:
     needs: [GetUser]
-    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && !needs.GetUser.outputs.require-result }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) || github.event_name == 'push' }}
     runs-on: macos-12
     timeout-minutes: 120
     steps:
@@ -144,7 +133,7 @@ jobs:
           name: usd-macOS
           path: USDinst
       - name: Write comment
-        if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') }} 
+        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -212,7 +201,7 @@ jobs:
           name: usd-win64
           path: USDinst
       - name: Write comment
-        if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') }} 
+        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result) }}
         uses: actions/github-script@v7
         with:
           script: |
