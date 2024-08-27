@@ -27,7 +27,7 @@ jobs:
         with:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
-      if: steps.checkUser.outputs.check-result == 'false'
+      if: steps.checkUser.outputs.check-result == 'false' 
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
