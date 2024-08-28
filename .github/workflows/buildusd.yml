@@ -36,7 +36,7 @@ jobs:
   Linux:
     needs: [GetUser]
     # if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.example_output) || github.event_name == 'push' }}
-    if : ${{ needs.GetUser.outputs.example_output }}
+    if : ${{ needs.GetUser.outputs.example_output == false }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
