@@ -118,7 +118,7 @@ jobs:
       - name: Build USD
         run: |
           export PATH=/Applications/CMake.app/Contents/bin:$PATH
-          python3 build_scripts/build_usd.py --no-materialx --generator Xcode --build USDgen/build --src USDgen/src USDinst -v
+          python3 build_scripts/build_usd.py --build-args USD,"-DPXR_HEADLESS_TEST_MODE=ON -DPXR_BUILD_TESTS=ON" --no-materialx --generator Xcode --build USDgen/build --src USDgen/src USDinst -v
       - name: Save build artifacts to cache
         if: steps.cache-usd-build-dependency.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
