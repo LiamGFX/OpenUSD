@@ -24,12 +24,6 @@ jobs:
         with:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
-  CheckUser:
-    needs: [GetUser]
-    runs-on: ubuntu-20.04
-    timeout-minutes: 5
-    steps:
-      - run: echo ${{ needs.GetUser.outputs.require-result }}
   Linux:
     needs: [GetUser]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
@@ -94,6 +88,7 @@ jobs:
     runs-on: macos-12
     timeout-minutes: 120
     steps:
+      - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
@@ -155,6 +150,7 @@ jobs:
     runs-on: windows-2019
     timeout-minutes: 120
     steps:
+      - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
