@@ -73,7 +73,7 @@ jobs:
           name: usd-linux
           path: USDinst
       - name: Write comment
-        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == true ) }}
+        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -90,7 +90,7 @@ jobs:
 
   macOS:
     needs: [GetUser]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == true ) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: macos-12
     timeout-minutes: 120
     steps:
@@ -134,7 +134,7 @@ jobs:
           name: usd-macOS
           path: USDinst
       - name: Write comment
-        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == true ) }}
+        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -151,7 +151,7 @@ jobs:
 
   Windows:
     needs: [GetUser]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == true ) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: windows-2019
     timeout-minutes: 120
     steps:
@@ -197,7 +197,7 @@ jobs:
           name: usd-win64
           path: USDinst
       - name: Write comment
-        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == true ) }}
+        if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) }}
         uses: actions/github-script@v7
         with:
           script: |
