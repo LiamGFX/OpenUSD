@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 5
     # Map a step output to a job output
     outputs:
-      example_output: ${{ !steps.check.outputs.require-result }}
+      require-result: ${{ !steps.check.outputs.require-result }}
     steps:
       - uses: actions-cool/check-user-permission@v2
         id: check
@@ -32,11 +32,11 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 5
     steps:
-      - run: echo ${{ needs.GetUser.outputs.example_output }}
+      - run: echo ${{ needs.GetUser.outputs.require-result }}
   Linux:
     needs: [GetUser]
     # if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.example_output) || github.event_name == 'push' }}
-    if : ${{ needs.GetUser.outputs.example_output == true }}
+    if : ${{ needs.GetUser.outputs.require-result == true }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
