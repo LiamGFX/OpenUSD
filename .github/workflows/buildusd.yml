@@ -129,7 +129,7 @@ jobs:
       - name: Test
         run: |
           export PATH=/Applications/CMake.app/Contents/bin:$PATH
-          ctest3 -V -C Release --exclude-regex
+          ctest -V -C Release --exclude-regex
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
