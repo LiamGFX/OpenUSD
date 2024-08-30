@@ -62,6 +62,10 @@ jobs:
           path: |
             USDinst
           key: ${{ runner.os }}-BuildUSD-py${{ env.PYTHON_VERSION }}-${{ hashFiles('build_scripts/**/*') }}
+      - name: Test
+        run: |
+          cd USDgen/build/OpenUSD
+          ctest -V -C Release
       - name: Upload artifiacts
         uses: actions/upload-artifact@v4
         with:
