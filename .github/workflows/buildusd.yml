@@ -90,8 +90,8 @@ jobs:
   macOS:
     needs: [GetUser]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
-    # runs-on: macos-12
-    runs-on: mac-14-self
+    runs-on: macos-12
+    # runs-on: mac-14-self
     timeout-minutes: 120
     steps:
       - run: echo ${{ needs.GetUser.outputs.require-result }}
@@ -199,6 +199,8 @@ jobs:
           key: ${{ runner.os }}-BuildUSD-py${{ env.PYTHON_VERSION }}-${{ hashFiles('build_scripts/**/*') }}
       - name: Test
         run: |
+          call set PATH=D:\a\OpenUSD\OpenUSD\USDinst\bin;D:\a\OpenUSD\OpenUSD\USDinst\lib;%PATH%
+          call set PYTHONPATH=D:\a\OpenUSD\OpenUSD\USDinst\lib\python;%PYTHONPATH%
           cd USDgen/build/OpenUSD
           ctest -V -C Release
         shell: cmd   
