@@ -203,8 +203,17 @@ jobs:
           call set PYTHONPATH=D:\a\OpenUSD\OpenUSD\USDinst\lib\python;%PYTHONPATH%
           cd USDgen/build/OpenUSD
           ctest -V -C Release --exclude-regex "testUsdviewNavigationKeys|testUsdviewUpAxis_yUp|testUsdviewAnimatedBounds|TfPathUtils" --output-junit testRes.xml
+        shell: cmd
+      - name: Test (Debug)
+        run: |
           dir D:\a\OpenUSD\OpenUSD\USDgen\build\OpenUSD
-        shell: cmd   
+        shell: cmd
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/windows@v2
+        if: always()
+        with:
+          files: |
+            USDgen/build/OpenUSD/**/testRes.xml
       - name: Upload artifacts
         # use v3 because actions/upload-artifact@v4 fails
         # see https://github.com/actions/upload-artifact/issues/485
