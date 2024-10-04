@@ -11,13 +11,12 @@ pxr_library(usd
         plug
         tf
         trace
+        ts
         vt
         work
-        ${Boost_PYTHON_LIBRARY}
         ${TBB_tbb_LIBRARY}
 
     INCLUDE_DIRS
-        ${Boost_INCLUDE_DIRS}
         ${TBB_INCLUDE_DIRS}
 
     PUBLIC_CLASSES
@@ -157,6 +156,8 @@ pxr_library(usd
         wrapTyped.cpp
         wrapUsdFileFormat.cpp
         wrapUtils.cpp
+        wrapValidationError.cpp
+        wrapValidator.cpp
         wrapVariantSets.cpp
         wrapVersion.cpp 
         wrapZipFile.cpp
@@ -178,24 +179,24 @@ pxr_library(usd
         codegenTemplates/wrapTokens.cpp
 
     DOXYGEN_FILES
-        doxygen/advancedFeatures.dox
-        doxygen/authoringEditing.dox
-        doxygen/bestPractices.dox
-        doxygen/commonIdioms.dox
-        doxygen/datatypes.dox
-        doxygen/dynamicFileFormat.dox
-        doxygen/front.dox
-        doxygen/generatingSchemas.dox
-        doxygen/instancing.dox
-        doxygen/multiThreading.dox
-        doxygen/objectModel.dox
-        doxygen/propertiesOfSceneDescription.dox 
-        doxygen/utf8Overview.dox
-        doxygen/valueClips.dox
-        doxygen/images/instancing/Instancing_Example.png
-        doxygen/images/instancing/Nested_Instancing_Example.png
-        doxygen/images/instancing/Relationship_Example.png
-        doxygen/images/instancing/Uninstanced_vs_Instanced.png
+        docs/advancedFeatures.md
+        docs/authoringEditing.md
+        docs/bestPractices.md
+        docs/commonIdioms.md
+        docs/datatypes.md
+        docs/dynamicFileFormat.md
+        docs/front.md
+        docs/generatingSchemas.md
+        docs/instancing.md
+        docs/multiThreading.md
+        docs/objectModel.md
+        docs/propertiesOfSceneDescription.md 
+        docs/utf8Overview.md
+        docs/valueClips.md
+        docs/images/instancing/Instancing_Example.png
+        docs/images/instancing/Nested_Instancing_Example.png
+        docs/images/instancing/Relationship_Example.png
+        docs/images/instancing/Uninstanced_vs_Instanced.png
         examples_usd.cpp
 )
 
@@ -260,6 +261,7 @@ pxr_test_scripts(
     testenv/testUsdSchemaRegistryThreadedInit.py
     testenv/testUsdSchemaVersioning.py
     testenv/testUsdSpecializes.py
+    testenv/testUsdSplines.py
     testenv/testUsdStage.py
     testenv/testUsdStageCache.py
     testenv/testUsdStageDefaultResolver.py
@@ -270,6 +272,8 @@ pxr_test_scripts(
     testenv/testUsdTimeSamples.py
     testenv/testUsdTimeValueAuthoring.py
     testenv/testUsdUsdzFileFormat.py
+    testenv/testUsdValidationError.py
+    testenv/testUsdValidatorMetadata.py
     testenv/testUsdValueClips.py
     testenv/testUsdVariantEditing.py
     testenv/testUsdVariantFallbacks.py
@@ -297,6 +301,13 @@ pxr_build_test_shared_lib(TestUsdResolverChangedResolver
 
     CPPFILES
         testenv/TestUsdResolverChangedResolver.cpp
+)
+
+pxr_build_test(testUsdCoreValidators
+        LIBRARIES
+        usd
+        CPPFILES
+        testenv/testUsdCoreValidators.cpp
 )
 
 pxr_build_test(testUsdAttributeBlockingCpp
@@ -763,6 +774,11 @@ pxr_install_test_dir(
     DEST testUsdZipFile_CPP
 )
 
+pxr_register_test(testUsdCoreValidators
+        COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testUsdCoreValidators"
+        EXPECTED_RETURN_CODE 0
+)
+
 pxr_register_test(testUsdAppliedAPISchemas
     PYTHON
     COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testUsdAppliedAPISchemas"
@@ -1142,6 +1158,12 @@ pxr_register_test(testUsdSpecializes
     EXPECTED_RETURN_CODE 0
 )
 
+pxr_register_test(testUsdSplines
+    PYTHON
+    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testUsdSplines"
+    EXPECTED_RETURN_CODE 0
+)
+
 pxr_register_test(testUsdMetadata
     PYTHON
     COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testUsdMetadata"
@@ -1310,5 +1332,17 @@ pxr_register_test(testUsdUsdzResolver
 pxr_register_test(testUsdOpaqueAttributes
     PYTHON
     COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testUsdOpaqueAttributes"
+    EXPECTED_RETURN_CODE 0
+)
+
+pxr_register_test(testUsdValidatorMetadata
+    PYTHON
+    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testUsdValidatorMetadata"
+    EXPECTED_RETURN_CODE 0
+)
+
+pxr_register_test(testUsdValidationError
+    PYTHON
+    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testUsdValidationError"
     EXPECTED_RETURN_CODE 0
 )

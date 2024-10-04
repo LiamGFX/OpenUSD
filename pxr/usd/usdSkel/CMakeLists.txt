@@ -12,11 +12,9 @@ pxr_library(usdSkel
         sdf
         usd
         usdGeom
-        ${Boost_PYTHON_LIBRARY}
         ${TBB_tbb_LIBRARY}
 
     INCLUDE_DIRS
-        ${Boost_INCLUDE_DIRS}
         ${TBB_INCLUDE_DIRS}
 
     PUBLIC_CLASSES
@@ -37,6 +35,10 @@ pxr_library(usdSkel
         tokens
         topology
         utils
+        validatorTokens
+
+    CPPFILES
+        validators.cpp
 
     PUBLIC_HEADERS
         api.h
@@ -92,6 +94,15 @@ pxr_library(usdSkel
         images/blendshapesWithInbetweens.svg
         images/influencesPrimvarLayout.svg
         images/unboundedInterpolationExample.svg
+)
+
+pxr_build_test(testUsdSkelValidators
+    LIBRARIES
+    tf
+    usd
+    usdSkel
+    CPPFILES
+    testenv/testUsdSkelValidators.cpp
 )
    
 pxr_test_scripts(
@@ -189,3 +200,9 @@ pxr_register_test(testUsdSkelUtils
     COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testUsdSkelUtils"
     EXPECTED_RETURN_CODE 0
 )
+
+pxr_register_test(testUsdSkelValidators
+    COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testUsdSkelValidators"
+    EXPECTED_RETURN_CODE 0
+)
+

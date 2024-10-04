@@ -34,6 +34,12 @@ class PxOsdMeshTopology;
 /// for the capsule about the +Z axis.  When the sweep is less than 360 degrees,
 /// the generated geometry is not closed.
 ///
+/// When the radii are different, the numCapAxial parameter is doubled and the
+/// number of cross-sections will be divided between the top and bottom
+/// hemispheres relative to the angle that each portion uses.  The topology will
+/// remain the same while the density of the mesh is more even than if the
+/// bottom and top caps used the same number of cross-sections.
+///
 /// Usage:
 /// \code{.cpp}
 ///
@@ -80,11 +86,29 @@ public:
         const ScalarType height,
         const GfMatrix4d* framePtr = nullptr)
     {
-        constexpr ScalarType sweep = 360;
-
         GeneratePoints(iter, numRadial, numCapAxial,
                        /* bottomRadius =    */ radius,
                        /* topRadius    =    */ radius,
+                       height, framePtr);
+    }
+
+    template<typename PointIterType,
+             typename ScalarType,
+             typename Enabled =
+                typename _EnableIfGfVec3Iterator<PointIterType>::type>
+    static void GeneratePoints(
+        PointIterType iter,
+        const size_t numRadial,
+        const size_t numCapAxial,
+        const ScalarType bottomRadius,
+        const ScalarType topRadius,
+        const ScalarType height,
+        const GfMatrix4d* framePtr = nullptr)
+    {
+        constexpr ScalarType sweep = 360;
+
+        GeneratePoints(iter, numRadial, numCapAxial,
+                       bottomRadius, topRadius,
                        height, sweep, framePtr);
     }
 
