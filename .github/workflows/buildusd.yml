@@ -33,6 +33,8 @@ jobs:
       - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
+        env:
+          PR_NUMBER: "${{ github.event.pull_request.number || HEAD }}"
       - name: Restore cached artifacts
         id: cache-usd-build-dependency
         uses: actions/cache/restore@v4
