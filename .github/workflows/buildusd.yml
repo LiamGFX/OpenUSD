@@ -34,7 +34,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         env:
-          PR_NUMBER: "${{ github.event.pull_request.number }}"
+          PR_NUMBER: "${{ github.event.issue.number }}"
           REF_N: "${{ github.ref }}"
       - name: Restore cached artifacts
         id: cache-usd-build-dependency
