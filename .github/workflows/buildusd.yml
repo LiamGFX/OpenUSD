@@ -13,7 +13,7 @@ env:
   PYTHON_VERSION_MAC: "3.11"
 
 jobs:
-  GetUser_rel:
+  GetUser:
     runs-on: ubuntu-20.04
     timeout-minutes: 5
     outputs:
@@ -25,12 +25,12 @@ jobs:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
   Linux:
-    needs: [GetUser_rel]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser_rel.outputs.require-result == 'true' ) || github.event_name == 'push' }}
+    needs: [GetUser]
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
-      - run: echo ${{ needs.GetUser_rel.outputs.require-result }}
+      - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
@@ -68,12 +68,12 @@ jobs:
           path: USDinst
 
   macOS:
-    needs: [GetUser_rel]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser_rel.outputs.require-result == 'true' ) || github.event_name == 'push' }}
+    needs: [GetUser]
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: macos-12
     timeout-minutes: 120
     steps:
-      - run: echo ${{ needs.GetUser_rel.outputs.require-result }}
+      - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
@@ -115,12 +115,12 @@ jobs:
           path: USDinst
 
   Windows:
-    needs: [GetUser_rel]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser_rel.outputs.require-result == 'true' ) || github.event_name == 'push' }}
+    needs: [GetUser]
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: windows-2019
     timeout-minutes: 120
     steps:
-      - run: echo ${{ needs.GetUser_rel.outputs.require-result }}
+      - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Restore cached artifacts
