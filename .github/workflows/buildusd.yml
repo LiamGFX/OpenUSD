@@ -24,6 +24,21 @@ jobs:
         with:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
+  SetRef:
+    needs: [GetUser]
+    runs-on: ubuntu-20.04
+    timeout-minutes: 5
+    steps:
+      - name: Get ref for push
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          echo "global_env_var=This is the main branch" >> $GITHUB_ENV
+          echo "::set-output name=global_env_var::This is the main branch"
+      - name: Get ref for PR
+        if: ${{ github.event.issue.pull_request }}
+        run: |
+          echo "global_env_var=This is the main branch" >> $GITHUB_ENV
+          echo "::set-output name=global_env_var::This is the main branch"
   Linux:
     needs: [GetUser]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
