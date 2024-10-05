@@ -32,14 +32,14 @@ jobs:
       - name: Get ref for push
         if: ${{ github.event_name == 'push' }}
         run: |
-          echo "MY_ENV_VAR=myValuePUSH" >> $GITHUB_ENV
+          echo "REF=${{ github.ref }}" >> $GITHUB_ENV
       - name: Get ref for PR
         if: ${{ github.event.issue.pull_request }}
         run: |
-          echo "MY_ENV_VAR=myValuePR" >> $GITHUB_ENV
+          echo "REF=${{ github.event.issue.number }}" >> $GITHUB_ENV
       - name: Use ENV_VAR
         run: |
-          echo "The value of MY_ENV_VAR is $MY_ENV_VAR"
+          echo "The value of REF is $REF"
   Linux:
     needs: [GetUser]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
