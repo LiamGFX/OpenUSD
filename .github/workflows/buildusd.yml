@@ -32,7 +32,7 @@ jobs:
       - name: Get ref for push
         if: ${{ github.event_name == 'push' }}
         run: |
-          echo 'REF=${{ github.ref }}" >> $GITHUB_ENV
+          echo "REF=${{ github.ref }}" >> $GITHUB_ENV
       - name: Get ref for PR
         if: ${{ github.event.issue.pull_request }}
         run: |
