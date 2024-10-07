@@ -53,11 +53,13 @@ jobs:
     timeout-minutes: 120
     steps:
       - env:
-        REF: ${{ steps.step1.outputs.ref }}
+          REF: ${{ steps.step1.outputs.ref }}
+          run: echo $REF
       - run: echo ${{ needs.GetUser.outputs.require-result }}
-      - run: echo $REF
       - name: Checkout code
         uses: actions/checkout@v4
+        env:
+          REF: ${{ steps.step1.outputs.ref }}
         with:
           ref: $REF
       - name: Restore cached artifacts
