@@ -25,7 +25,6 @@ jobs:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
   SetRef:
-    needs: [GetUser]
     runs-on: ubuntu-20.04
     timeout-minutes: 5
     outputs:
@@ -54,8 +53,7 @@ jobs:
     steps:
       - env:
           REF: ${{needs.SetRef.outputs.ref}}
-        run: echo "$REF"
-      - run: echo ${{ needs.GetUser.outputs.require-result }}
+      - run: echo $REF ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -95,7 +93,7 @@ jobs:
           path: USDinst
 
   macOS:
-    needs: [GetUser]
+    needs: [GetUser, SetRef]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: macos-12
     timeout-minutes: 120
@@ -103,6 +101,8 @@ jobs:
       - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{needs.SetRef.outputs.ref}}
       - name: Restore cached artifacts
         id: cache-usd-build-dependency
         uses: actions/cache/restore@v4
@@ -142,7 +142,7 @@ jobs:
           path: USDinst
 
   Windows:
-    needs: [GetUser]
+    needs: [GetUser, SetRef]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: windows-2019
     timeout-minutes: 120
@@ -150,6 +150,8 @@ jobs:
       - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{needs.SetRef.outputs.ref}}
       - name: Restore cached artifacts
         id: cache-usd-build-dependency
         uses: actions/cache/restore@v4
