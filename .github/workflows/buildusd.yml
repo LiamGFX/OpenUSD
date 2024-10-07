@@ -45,7 +45,8 @@ jobs:
       - name: Set output to ENV_VAR
         id: step1
         run: |
-          run: echo "ref=$REF" >> "$GITHUB_OUTPUT"
+          run: |
+            echo "ref=$REF" >> "$GITHUB_OUTPUT"
   Linux:
     needs: [GetUser, SetRef]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
