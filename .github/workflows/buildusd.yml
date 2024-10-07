@@ -41,7 +41,7 @@ jobs:
         run: |
           echo "The value of REF is $REF"
   Linux:
-    needs: [GetUser]
+    needs: [GetUser, SetRef]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
@@ -49,9 +49,8 @@ jobs:
       - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
-        env:
-          PR_NUMBER: "${{ github.event.issue.number }}"
-          REF_N: "${{ github.ref }}"
+        with:
+          ref: $REF
       - name: Restore cached artifacts
         id: cache-usd-build-dependency
         uses: actions/cache/restore@v4
