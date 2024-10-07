@@ -53,7 +53,7 @@ jobs:
     timeout-minutes: 120
     steps:
       - env:
-          REF: ${{needs.job1.outputs.ref}}
+          REF: ${{needs.SetRef.outputs.ref}}
         run: echo "$REF"
       - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
