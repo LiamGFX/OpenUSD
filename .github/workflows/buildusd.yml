@@ -56,12 +56,10 @@ jobs:
           REF: ${{needs.SetRef.outputs.ref}}
         run: echo "$REF"
       - run: echo ${{ needs.GetUser.outputs.require-result }}
-      - env:
-          REF: ${{needs.SetRef.outputs.ref}}
-        name: Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: $REF
+          ref: ${{needs.SetRef.outputs.ref}}
       - name: Restore cached artifacts
         id: cache-usd-build-dependency
         uses: actions/cache/restore@v4
