@@ -56,7 +56,9 @@ jobs:
           REF: ${{needs.SetRef.outputs.ref}}
         run: echo "$REF"
       - run: echo ${{ needs.GetUser.outputs.require-result }}
-      - name: Checkout code
+      - env:
+          REF: ${{needs.SetRef.outputs.ref}}
+        name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: $REF
