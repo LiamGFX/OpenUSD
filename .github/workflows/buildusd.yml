@@ -28,6 +28,8 @@ jobs:
     needs: [GetUser]
     runs-on: ubuntu-20.04
     timeout-minutes: 5
+    outputs:
+      ref: ${{ steps.step1.outputs.ref }}
     steps:
       - name: Get ref for push
         if: ${{ github.event_name == 'push' }}
@@ -40,13 +42,20 @@ jobs:
       - name: Use ENV_VAR
         run: |
           echo "The value of REF is $REF"
+      - name: Set output to ENV_VAR
+        id: step1
+        run: |
+          run: echo "ref=$REF" >> "$GITHUB_OUTPUT"
   Linux:
     needs: [GetUser, SetRef]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
+      - env:
+        REF: ${{ steps.step1.outputs.ref }}
       - run: echo ${{ needs.GetUser.outputs.require-result }}
+      - run: echo $REF
       - name: Checkout code
         uses: actions/checkout@v4
         with:
