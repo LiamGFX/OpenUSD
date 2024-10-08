@@ -94,7 +94,7 @@ jobs:
       - name: Install dependencies
         run: |
           export PATH=/Applications/CMake.app/Contents/bin:$PATH
-          sudo xcode-select -s /Applications/Xcode_13.3.app/Contents/Developer
+          sudo xcode-select -s /Applications/Xcode_14.1.app/Contents/Developer
           # Set SYSTEM_VERSION_COMPAT while installing Python packages to
           # accommodate the macOS version numbering change from 10.x to 11
           export SYSTEM_VERSION_COMPAT=1
