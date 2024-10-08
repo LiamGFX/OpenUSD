@@ -73,7 +73,7 @@ jobs:
   macOS:
     needs: [GetUser]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
-    runs-on: macos-12
+    runs-on: macos-13
     timeout-minutes: 120
     steps:
       - run: echo ${{ needs.GetUser.outputs.require-result }}
