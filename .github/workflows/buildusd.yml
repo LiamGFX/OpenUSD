@@ -24,7 +24,7 @@ jobs:
         with:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
-  SetGitRef:
+  GetGitRef:
     runs-on: ubuntu-20.04
     timeout-minutes: 5
     outputs:
@@ -46,18 +46,16 @@ jobs:
         run: |
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
   Linux:
-    needs: [GetUser, SetGitRef]
+    needs: [GetUser, GetGitRef]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
-      - env:
-          REF: ${{needs.SetGitRef.outputs.ref}}
-        run: echo $REF ${{ needs.GetUser.outputs.require-result }}
+      - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{needs.SetGitRef.outputs.ref}}
+          ref: ${{needs.GetGitRef.outputs.ref}}
       - name: Restore cached artifacts
         id: cache-usd-build-dependency
         uses: actions/cache/restore@v4
@@ -93,16 +91,16 @@ jobs:
           path: USDinst
 
   macOS:
-    needs: [GetUser, SetGitRef]
+    needs: [GetUser, GetGitRef]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
-    runs-on: macos-12
+    runs-on: macos-13
     timeout-minutes: 120
     steps:
       - run: echo ${{ needs.GetUser.outputs.require-result }}
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{needs.SetGitRef.outputs.ref}}
+          ref: ${{needs.GetGitRef.outputs.ref}}
       - name: Restore cached artifacts
         id: cache-usd-build-dependency
         uses: actions/cache/restore@v4
@@ -118,7 +116,7 @@ jobs:
       - name: Install dependencies
         run: |
           export PATH=/Applications/CMake.app/Contents/bin:$PATH
-          sudo xcode-select -s /Applications/Xcode_13.3.app/Contents/Developer
+          sudo xcode-select -s /Applications/Xcode_14.1.app/Contents/Developer
           # Set SYSTEM_VERSION_COMPAT while installing Python packages to
           # accommodate the macOS version numbering change from 10.x to 11
           export SYSTEM_VERSION_COMPAT=1
@@ -142,7 +140,7 @@ jobs:
           path: USDinst
 
   Windows:
-    needs: [GetUser, SetGitRef]
+    needs: [GetUser, GetGitRef]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: windows-2019
     timeout-minutes: 120
@@ -151,7 +149,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{needs.SetGitRef.outputs.ref}}
+          ref: ${{needs.GetGitRef.outputs.ref}}
       - name: Restore cached artifacts
         id: cache-usd-build-dependency
         uses: actions/cache/restore@v4
