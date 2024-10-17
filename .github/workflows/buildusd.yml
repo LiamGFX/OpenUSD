@@ -11,8 +11,11 @@ on:
 env:
   PYTHON_VERSION: "3.9"
   PYTHON_VERSION_MAC: "3.11"
+  MAGIC_COMMENT: '/AzurePipelines run'
   EXCLUDE_REGEX_MAC: "testArchDemangle"
   EXCLUDE_REGEX_WIN: "testUsdviewNavigationKeys|testUsdviewUpAxis_yUp|testUsdviewAnimatedBounds|TfPathUtils"
+  OUTPUT_JUNIT: "testRes.xml"
+
 jobs:
   GetUser:
     runs-on: ubuntu-20.04
@@ -46,6 +49,9 @@ jobs:
         id: setter
         run: |
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
+      - name: ECHO
+        run: |
+          echo "The value of OUTPUT_JUNIT is ${{ env.MAGIC_COMMENT }}"
   Linux:
     needs: [GetUser, GetGitRef]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
@@ -88,7 +94,7 @@ jobs:
       - name: Test
         run: |
           cd USDgen/build/OpenUSD
-          ctest -V -C Release --exclude-regex "testArchDemangle" --output-junit testRes.xml
+          ctest -V -C Release --exclude-regex "testArchDemangle" --output-junit ${{ env.OUTPUT_JUNIT }}
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -142,7 +148,7 @@ jobs:
         run: |
           export PATH=/Applications/CMake.app/Contents/bin:$PATH
           cd USDgen/build/OpenUSD
-          ctest -V -C Release --exclude-regex ${{ env.EXCLUDE_REGEX_MAC }} --output-junit testRes.xml
+          ctest -V -C Release --exclude-regex ${{ env.EXCLUDE_REGEX_MAC }} --output-junit ${{ env.OUTPUT_JUNIT }}
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -198,7 +204,7 @@ jobs:
           call set PATH=D:\a\OpenUSD\OpenUSD\USDinst\bin;D:\a\OpenUSD\OpenUSD\USDinst\lib;%PATH%
           call set PYTHONPATH=D:\a\OpenUSD\OpenUSD\USDinst\lib\python;%PYTHONPATH%
           cd USDgen/build/OpenUSD
-          ctest -V -C Release --output-junit testRes.xml
+          ctest -V -C Release --output-junit ${{ env.OUTPUT_JUNIT }}
           dir D:\a\OpenUSD\OpenUSD\USDgen\build\OpenUSD
         shell: cmd
       - name: Upload artifacts
