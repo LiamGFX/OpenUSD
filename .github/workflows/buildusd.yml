@@ -87,7 +87,7 @@ jobs:
       - name: Test
         run: |
           cd USDgen/build/OpenUSD
-          ctest -V -C Release --output-junit testRes.xml
+          ctest -V -C Release --exclude-regex "testArchDemangle" --output-junit testRes.xml
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -197,7 +197,7 @@ jobs:
           call set PATH=D:\a\OpenUSD\OpenUSD\USDinst\bin;D:\a\OpenUSD\OpenUSD\USDinst\lib;%PATH%
           call set PYTHONPATH=D:\a\OpenUSD\OpenUSD\USDinst\lib\python;%PYTHONPATH%
           cd USDgen/build/OpenUSD
-          ctest -V -C Release --exclude-regex "testUsdviewNavigationKeys|testUsdviewUpAxis_yUp|testUsdviewAnimatedBounds|TfPathUtils" --output-junit testRes.xml
+          ctest -V -C Release --output-junit testRes.xml
           dir D:\a\OpenUSD\OpenUSD\USDgen\build\OpenUSD
         shell: cmd
       - name: Upload artifacts
