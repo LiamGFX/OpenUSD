@@ -11,9 +11,7 @@ on:
 env:
   PYTHON_VERSION: "3.9"
   PYTHON_VERSION_MAC: "3.11"
-  MAGIC_COMMENT: '/AzurePipelines run'
   EXCLUDE_REGEX_MAC: "testArchDemangle"
-  EXCLUDE_REGEX_WIN: "testUsdviewNavigationKeys|testUsdviewUpAxis_yUp|testUsdviewAnimatedBounds|TfPathUtils"
   OUTPUT_JUNIT: "testRes.xml"
 
 jobs:
@@ -53,11 +51,8 @@ jobs:
         run: |
           echo "The value of OUTPUT_JUNIT is ${{ env.MAGIC_COMMENT }}"
   Linux:
-    env:
-      MAGIC_COMMENT: '/AzurePipelines run'
-
     needs: [GetUser, GetGitRef]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, env.MAGIC_COMMENT) && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
