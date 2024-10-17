@@ -50,7 +50,7 @@ jobs:
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
   Linux:
     needs: [GetUser, GetGitRef]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, env.MAGIC_COMMENT ) && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, env.MAGIC_COMMENT)) && needs.GetUser.outputs.require-result == 'true' || github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     timeout-minutes: 120
     steps:
@@ -99,7 +99,7 @@ jobs:
 
   macOS:
     needs: [GetUser, GetGitRef]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, env.MAGIC_COMMENT) && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, env.MAGIC_COMMENT)) && needs.GetUser.outputs.require-result == 'true' || github.event_name == 'push' }}
     runs-on: macos-13
     timeout-minutes: 120
     steps:
@@ -153,7 +153,7 @@ jobs:
 
   Windows:
     needs: [GetUser, GetGitRef]
-    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, env.MAGIC_COMMENT) && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
+    if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, env.MAGIC_COMMENT)) && needs.GetUser.outputs.require-result == 'true' || github.event_name == 'push' }}
     runs-on: windows-2019
     timeout-minutes: 120
     steps:
