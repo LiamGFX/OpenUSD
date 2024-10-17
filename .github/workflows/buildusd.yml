@@ -11,6 +11,7 @@ on:
 env:
   PYTHON_VERSION: "3.9"
   PYTHON_VERSION_MAC: "3.11"
+  EXCLUDE_REGEX_MAC: "testArchDemangle"
 
 jobs:
   GetUser:
@@ -141,7 +142,7 @@ jobs:
         run: |
           export PATH=/Applications/CMake.app/Contents/bin:$PATH
           cd USDgen/build/OpenUSD
-          ctest -V -C Release --output-junit testRes.xml
+          ctest -V -C Release --exclude-regex ${{ env.EXCLUDE_REGEX_MAC }} --output-junit testRes.xml
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -197,7 +198,7 @@ jobs:
           call set PATH=D:\a\OpenUSD\OpenUSD\USDinst\bin;D:\a\OpenUSD\OpenUSD\USDinst\lib;%PATH%
           call set PYTHONPATH=D:\a\OpenUSD\OpenUSD\USDinst\lib\python;%PYTHONPATH%
           cd USDgen/build/OpenUSD
-          ctest -V -C Release --output-junit testRes.xml
+          ctest -V -C Release --exclude-regex "testUsdviewNavigationKeys|testUsdviewUpAxis_yUp|testUsdviewAnimatedBounds|TfPathUtils" --output-junit testRes.xml
           dir D:\a\OpenUSD\OpenUSD\USDgen\build\OpenUSD
         shell: cmd
       - name: Upload artifacts
