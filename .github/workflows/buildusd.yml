@@ -98,6 +98,11 @@ jobs:
         with:
           name: usd-linux
           path: USDinst
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: usd-linux-testRes.xml
+          path: USDgen/build/OpenUSD/testRes.xml
 
   macOS:
     needs: [GetUser, GetGitRef]
@@ -146,12 +151,17 @@ jobs:
         run: |
           export PATH=/Applications/CMake.app/Contents/bin:$PATH
           cd USDgen/build/OpenUSD
-          ctest -V -C Release --exclude-regex ${{ env.EXCLUDE_REGEX_MAC }} --output-junit ${{ env.OUTPUT_JUNIT }}
+          ctest -V -C Release --output-junit ${{ env.OUTPUT_JUNIT }}
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: usd-macOS
           path: USDinst
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: usd-macOS-testRes.xml
+          path: USDgen/build/OpenUSD/testRes.xml
 
   Windows:
     needs: [GetUser, GetGitRef]
@@ -217,7 +227,7 @@ jobs:
         # see https://github.com/actions/upload-artifact/issues/485
         uses: actions/upload-artifact@v3
         with:
-          name: usd-win64-testRes-xml
+          name: usd-win64-testRes.xml
           path: USDgen/build/OpenUSD/testRes.xml
       - name: Write comment
         if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) }}
