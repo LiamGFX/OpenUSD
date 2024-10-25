@@ -11,6 +11,7 @@ on:
 env:
   PYTHON_VERSION: "3.9"
   PYTHON_VERSION_MAC: "3.11"
+  OUTPUT_JUNIT: "testRes.xml"
 
 jobs:
   GetUser:
@@ -24,6 +25,7 @@ jobs:
         with:
           require: 'write'
           username: ${{ github.event.comment.user.login }}
+
   GetGitRef:
     runs-on: ubuntu-20.04
     timeout-minutes: 5
@@ -45,6 +47,7 @@ jobs:
         id: setter
         run: |
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
+
   Linux:
     needs: [GetUser, GetGitRef]
     if: ${{ (github.event.issue.pull_request && contains(github.event.comment.body, '/AzurePipelines run') && needs.GetUser.outputs.require-result == 'true' ) || github.event_name == 'push' }}
@@ -76,7 +79,7 @@ jobs:
           pip install PySide2 PyOpenGL
       - name: Build USD
         run: |
-          python3 build_scripts/build_usd.py --no-materialx --build USDgen/build --src USDgen/src USDinst -v
+          python3 build_scripts/build_usd.py --no-materialx --build USDgen/build --src USDgen/src USDinst --build-args USD,"-DPXR_HEADLESS_TEST_MODE=ON -DPXR_BUILD_TESTS=ON" -v
       - name: Save build artifacts to cache
         if: steps.cache-usd-build-dependency.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
@@ -84,11 +87,20 @@ jobs:
           path: |
             USDinst
           key: ${{ runner.os }}-BuildUSD-py${{ env.PYTHON_VERSION }}-${{ hashFiles('build_scripts/**/*') }}
+      - name: Test
+        run: |
+          cd USDgen/build/OpenUSD
+          ctest -V -C Release --exclude-regex "testArchDemangle" --output-junit ${{ env.OUTPUT_JUNIT }}
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: usd-linux
           path: USDinst
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: usd-linux-testRes.xml
+          path: USDgen/build/OpenUSD/testRes.xml
 
   macOS:
     needs: [GetUser, GetGitRef]
@@ -125,7 +137,7 @@ jobs:
       - name: Build USD
         run: |
           export PATH=/Applications/CMake.app/Contents/bin:$PATH
-          python3 build_scripts/build_usd.py --no-materialx --generator Xcode --build USDgen/build --src USDgen/src USDinst -v
+          python3 build_scripts/build_usd.py --no-materialx --generator Xcode --build USDgen/build --src USDgen/src USDinst --build-args USD,"-DPXR_HEADLESS_TEST_MODE=ON -DPXR_BUILD_TESTS=ON" -v
       - name: Save build artifacts to cache
         if: steps.cache-usd-build-dependency.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
@@ -133,11 +145,21 @@ jobs:
           path: |
             USDinst
           key: ${{ runner.os }}-BuildUSD-py${{ env.PYTHON_VERSION_MAC }}-${{ hashFiles('build_scripts/**/*') }}
+      - name: Test
+        run: |
+          export PATH=/Applications/CMake.app/Contents/bin:$PATH
+          cd USDgen/build/OpenUSD
+          ctest -V -C Release --output-junit ${{ env.OUTPUT_JUNIT }}
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: usd-macOS
           path: USDinst
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: usd-macOS-testRes.xml
+          path: USDgen/build/OpenUSD/testRes.xml
 
   Windows:
     needs: [GetUser, GetGitRef]
@@ -174,7 +196,7 @@ jobs:
           REM build_usd.py. This causes the build to fail, because
           REM the pre-installed boost does not include boost_python27
           call set BOOST_ROOT=
-          python build_scripts/build_usd.py --no-materialx --generator "Visual Studio 16 2019" --build USDgen/build --src USDgen/src USDinst --build-args USD,"-DPXR_ENABLE_PRECOMPILED_HEADERS=OFF" -v
+          python build_scripts/build_usd.py --no-materialx --generator "Visual Studio 16 2019" --build USDgen/build --src USDgen/src USDinst --build-args USD,"-DPXR_ENABLE_PRECOMPILED_HEADERS=OFF -DPXR_HEADLESS_TEST_MODE=ON -DPXR_BUILD_TESTS=ON" -v
         shell: cmd          
       - name: Save build artifacts to cache
         if: steps.cache-usd-build-dependency.outputs.cache-hit != 'true'
@@ -183,6 +205,14 @@ jobs:
           path: |
             USDinst
           key: ${{ runner.os }}-BuildUSD-py${{ env.PYTHON_VERSION }}-${{ hashFiles('build_scripts/**/*') }}
+      - name: Test
+        run: |
+          call set PATH=D:\a\OpenUSD\OpenUSD\USDinst\bin;D:\a\OpenUSD\OpenUSD\USDinst\lib;%PATH%
+          call set PYTHONPATH=D:\a\OpenUSD\OpenUSD\USDinst\lib\python;%PYTHONPATH%
+          cd USDgen/build/OpenUSD
+          ctest -V -C Release --output-junit ${{ env.OUTPUT_JUNIT }}
+          dir D:\a\OpenUSD\OpenUSD\USDgen\build\OpenUSD
+        shell: cmd
       - name: Upload artifacts
         # use v3 because actions/upload-artifact@v4 fails
         # see https://github.com/actions/upload-artifact/issues/485
@@ -190,3 +220,10 @@ jobs:
         with:
           name: usd-win64
           path: USDinst
+      - name: Upload artifacts
+        # use v3 because actions/upload-artifact@v4 fails
+        # see https://github.com/actions/upload-artifact/issues/485
+        uses: actions/upload-artifact@v3
+        with:
+          name: usd-win64-testRes.xml
+          path: USDgen/build/OpenUSD/testRes.xml
